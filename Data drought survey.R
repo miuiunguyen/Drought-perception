@@ -4,7 +4,7 @@
 rm(list=ls())
 setwd("C:/Users/Ms Mui/OneDrive - Victoria University of Wellington - STAFF/Data")
 getwd()
-Drought <- read_excel("survey_export-v2.xlsx")
+Drought <- read_excel("survey_export-v2-.xlsx")
 library(haven)
 library(dplyr)
 library(tidyr)
@@ -97,7 +97,18 @@ Drought <- Drought %>%
   On_farm_Experience <= 10 ~ "6-10 years",
   On_farm_Experience <= 15 ~ "11-15 years",
   On_farm_Experience <= 20 ~ "16-20 years",
-  On_farm_Experience > 20 ~ "Over 20 years"))
+  On_farm_Experience > 20 ~ "Over 20 years")) %>% 
+ mutate(Education = case_when(
+    Education == "Some secondary school" ~ 0,
+    Education == "Secondary school" ~ 0,
+    Education == "Certificate (level 1-6)" ~ 0,
+    Education == "Prefer not to answer" ~ 0,
+    Education == "Other" ~ 0,
+    Education == "Master's degree" ~ 1,
+    Education == "Post-graduate diploma or certificate / Bachelor's honour's degree" ~ 1,
+    Education == "Diploma (level 5-7)" ~ 1,
+    Education == "Doctoral degreer" ~ 1,
+    Education == "Bachelor's degree" ~ 1))
 
 ###########################################################
 ############### PART 1: PLOT FIGURES ######################
@@ -206,7 +217,7 @@ p2
 ########### PART 2: REGRESSION MODEL ################
 #####################################################
 ###PREPARE DATA#######
-library(dplyr)
+
 Drought_freq_int1 <- Drought %>% 
  dplyr::select(q114_drought_freq, q114_drought_int, Aweighted2,
                CC_impact_belief, Drought_2014_2018, Drought_2009_2018, 
@@ -260,7 +271,7 @@ exp(cbind(OR = coef(olr_Perception_freq3), ci))
 library(stargazer)
 models <- list(olr_Perception_freq3,olr_Perception_freq4,olr_Perception_freq5,
                olr_Perception_int3, olr_Perception_int4,olr_Perception_int5)
-stargazer(models, apply.coef=exp, t.auto=F, p.auto=F, type = "html",
+stargazer(models, apply.coef=exp, t.auto=F, p.auto=F, type = "text",
           out="OLR Relative risk ratios of Drought Perception & Intensity",align=TRUE)
 
 #Check models without age control - show in Appendix in the paper
@@ -293,7 +304,7 @@ stargazer(a1,b1,c1,d1,e1,f1,type="text",align=F, out="brant test perception")
 
 models2 <- list(olr_Perception_freq2,olr_Perception_freq0,olr_Perception_freq1,
                 olr_Perception_int2, olr_Perception_int0,olr_Perception_int1)
-stargazer(models2, apply.coef=exp, t.auto=F, p.auto=F, type = "html",
+stargazer(models2, apply.coef=exp, t.auto=F, p.auto=F, type = "text",
           out="OLR without age Relative risk ratios of Drought Perception & Intensity",align=TRUE)
 
 #Check weighted models - with using years as weighted average value - not show in the paper
@@ -324,7 +335,7 @@ stargazer(a2,b2,c2,d2,e2,f2,type="text",align=F, out="brant test perception")
 
 models3 <- list(olr_Perception_freq6,olr_Perception_freq7,olr_Perception_freq8,
                 olr_Perception_int6, olr_Perception_int7,olr_Perception_int8)
-stargazer(models3, apply.coef=exp, t.auto=F, p.auto=F, type = "html",
+stargazer(models3, apply.coef=exp, t.auto=F, p.auto=F, type = "text",
           out="OLR Weighted Relative risk ratios of Drought Perception & Intensity",align=TRUE)
 
 #Check weighted models - with using years as weighted average value - show in the appendix and rObustness
@@ -353,7 +364,7 @@ stargazer(a3,b3,c3,d3,e3,f3,type="text",align=F, out="brant test perception")
 
 models4 <- list(olr_Perception_freq9,olr_Perception_freq10,olr_Perception_freq11,
                 olr_Perception_int9, olr_Perception_int10,olr_Perception_int11)
-stargazer(models4, apply.coef=exp, t.auto=F, p.auto=F, type = "html",
+stargazer(models4, apply.coef=exp, t.auto=F, p.auto=F, type = "text",
           out="OLR Weighted with out years Relative risk ratios of Drought Perception & Intensity",align=TRUE)
 
 ################################################################
@@ -428,7 +439,7 @@ stargazer(a4,b4,c4,d4,e4,f4,type="html",align=F,out="brant test focus 1")
 
 models5 <- list(olr_focus_climate1,olr_focus_ghgs1,olr_focus_water_efficient1,
                 olr_focus_climate2,olr_focus_ghgs2,olr_focus_water_efficient2)
-stargazer(models5, apply.coef=exp, t.auto=F, p.auto=F, type = "html",
+stargazer(models5, apply.coef=exp, t.auto=F, p.auto=F, type = "text",
           out="OLR Relative risk ratios of focus",align=TRUE)
 
 ##MODELS PART 2 WITH MULTIPLE YEARS FROM 2010 TO 2018
@@ -468,7 +479,7 @@ stargazer(a5,b5,c5,d5,e5,f5,type="html",align=F,out="brant test focus 2")
 
 models6 <- list(olr_focus_climate3,olr_focus_ghgs3,olr_focus_water_efficient3,
                 olr_focus_climate4,olr_focus_ghgs4,olr_focus_water_efficient4)
-stargazer(models6, apply.coef=exp, t.auto=F, p.auto=F, type = "html",
+stargazer(models6, apply.coef=exp, t.auto=F, p.auto=F, type = "text",
           out="OLR Relative risk ratios of focus in multiple years",align=TRUE)
 
 ##MODELS PART 3 WITH NO YEARS
