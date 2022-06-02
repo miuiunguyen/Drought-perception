@@ -2,7 +2,7 @@
 ############# IMPORT DATA AND PACKAGE USED #################
 ###########################################################
 rm(list=ls())
-setwd("C:/Users/Ms Mui/OneDrive - Victoria University of Wellington - STAFF/Data")
+setwd("")
 getwd()
 Drought <- read_excel("survey_export-v2-.xlsx")
 library(haven)
